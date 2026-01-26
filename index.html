@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productivity Hub - Task Manager</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="main-header">
+            <div class="header-content">
+                <h1>Productivity Hub</h1>
+                <div class="header-stats">
+                    <span class="stat-item">
+                        <span class="stat-label">Tasks:</span>
+                        <span id="task-count">0</span>
+                    </span>
+                    <span class="stat-item">
+                        <span class="stat-label">Completed:</span>
+                        <span id="completed-count">0</span>
+                    </span>
+                </div>
+            </div>
+            <!-- Consider adding dark mode toggle here -->
+            <p class="tagline">Stay organized, achieve more</p>
+        </header>
+
+        <!-- Tab Navigation -->
+        <nav class="tabs">
+            <button class="tab-btn active" data-tab="todos">
+                <span class="tab-icon">✓</span>
+                <span>To-Do List</span>
+            </button>
+            <button class="tab-btn" data-tab="notes">
+                <span class="tab-icon">📝</span>
+                <span>Notes</span>
+            </button>
+            <button class="tab-btn" data-tab="goals">
+                <span class="tab-icon">🎯</span>
+                <span>Goals</span>
+            </button>
+        </nav>
+
+        <!-- To-Do List Section -->
+        <section id="todos" class="tab-content active">
+            <div class="section-header">
+                <h2>My Tasks</h2>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="active">Active</button>
+                    <button class="filter-btn" data-filter="completed">Completed</button>
+                </div>
+            </div>
+
+            <div class="input-section">
+                <div class="input-group">
+                    <input type="text" id="todo-input" placeholder="What needs to be done?" maxlength="100">
+                    <button id="add-todo-btn" class="btn-primary">
+                        <span>Add Task</span>
+                    </button>
+                </div>
+                <!-- Might add category tags or priority selector here -->
+                <div class="input-meta">
+                    <select id="todo-priority" class="priority-select">
+                        <option value="low">Low Priority</option>
+                        <option value="medium" selected>Medium Priority</option>
+                        <option value="high">High Priority</option>
+                    </select>
+                    <!-- TODO: Add due date picker -->
+                </div>
+            </div>
+
+            <div class="list-container">
+                <ul id="todo-list" class="item-list">
+                    <!-- Tasks will be populated here by JS -->
+                </ul>
+                <div id="empty-state-todos" class="empty-state">
+                    <p>No tasks yet. Add one above to get started!</p>
+                </div>
+            </div>
+
+            <div class="section-footer">
+                <button id="clear-completed" class="btn-secondary">Clear Completed</button>
+                <span class="items-left"><span id="active-count">0</span> tasks remaining</span>
+            </div>
+        </section>
+
+        <!-- Notes Section -->
+        <section id="notes" class="tab-content">
+            <div class="section-header">
+                <h2>My Notes</h2>
+                <button id="clear-notes" class="btn-danger-small">Clear All Notes</button>
+            </div>
+
+            <div class="input-section">
+                <div class="input-group">
+                    <input type="text" id="note-title" placeholder="Note title..." maxlength="50">
+                    <button id="add-note-btn" class="btn-primary">
+                        <span>Save Note</span>
+                    </button>
+                </div>
+                <div class="note-editor">
+                    <textarea id="note-content" placeholder="Write your thoughts here..." rows="6"></textarea>
+                    <!-- Consider markdown support or formatting toolbar -->
+                    <div class="editor-footer">
+                        <span id="char-count">0</span> characters
+                    </div>
+                </div>
+            </div>
+
+            <div class="notes-container">
+                <div id="notes-list" class="notes-grid">
+                    <!-- Notes will be populated here by JS -->
+                </div>
+                <div id="empty-state-notes" class="empty-state">
+                    <p>No notes yet. Create your first note above!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Goals Section -->
+        <section id="goals" class="tab-content">
+            <div class="section-header">
+                <h2>My Goals</h2>
+                <div class="goal-stats">
+                    <span id="goals-progress">0% Complete</span>
+                </div>
+            </div>
+
+            <div class="input-section">
+                <div class="input-group">
+                    <input type="text" id="goal-input" placeholder="What do you want to achieve?" maxlength="100">
+                    <input type="date" id="goal-deadline" class="date-input">
+                    <button id="add-goal-btn" class="btn-primary">
+                        <span>Add Goal</span>
+                    </button>
+                </div>
+                <div class="input-meta">
+                    <select id="goal-category" class="category-select">
+                        <option value="personal">Personal</option>
+                        <option value="work">Work</option>
+                        <option value="health">Health</option>
+                        <option value="learning">Learning</option>
+                        <option value="finance">Finance</option>
+                    </select>
+                    <!-- Might add milestone tracking later -->
+                </div>
+            </div>
+
+            <div class="list-container">
+                <ul id="goals-list" class="goals-list">
+                    <!-- Goals will be populated here by JS -->
+                </ul>
+                <div id="empty-state-goals" class="empty-state">
+                    <p>No goals set. Define your first goal above!</p>
+                </div>
+            </div>
+
+            <div class="section-footer">
+                <button id="clear-goals" class="btn-secondary">Clear Completed Goals</button>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="main-footer">
+            <p>Built with focus and determination</p>
+            <!-- Add your GitHub link here when you upload -->
+        </footer>
+    </div>
+
+    <!-- Modal for editing notes (will implement in JS) -->
+    <div id="edit-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3>Edit Note</h3>
+            <input type="text" id="edit-note-title" placeholder="Note title...">
+            <textarea id="edit-note-content" rows="8"></textarea>
+            <div class="modal-actions">
+                <button id="save-edit-btn" class="btn-primary">Save Changes</button>
+                <button id="cancel-edit-btn" class="btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
