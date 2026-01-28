@@ -11,7 +11,9 @@ window.addEventListener('DOMContentLoaded', () => {
     initializeApp();
 });
 
-// Initialize the app - set up all event listeners
+/* Initialize app: bind UI event handlers, load initial state, and perform
+   the first render. Responsible for wiring tabs, todo/note/goal controls,
+   modal handlers, and updating header/goal stats. */
 function initializeApp() {
     // Tab switching
     document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -54,7 +56,8 @@ function initializeApp() {
     updateStats();
 }
 
-// Tab Switching
+// Tab switching: toggle the active tab button and associated content pane
+// Keeps the UI in sync when the user switches between To-Dos, Notes, and Goals
 function switchTab(tabName) {
     // Remove active class from all tabs and content
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -66,7 +69,12 @@ function switchTab(tabName) {
 }
 
 // ========== TODO FUNCTIONS ==========
-
+/*
+ Add a new todo:
+ - validate input and read priority
+ - create a todo object with id, text, completed flag, priority, and timestamp
+ - append to `todos`, persist to localStorage, and refresh UI and stats
+*/
 function addTodo() {
     const input = document.getElementById('todo-input');
     const priority = document.getElementById('todo-priority').value;
@@ -125,6 +133,11 @@ function clearCompletedTodos() {
     }
 }
 
+/*
+ Render todos according to `currentFilter` (all/active/completed).
+ Updates the DOM list or shows an empty state and keeps action handlers
+ (toggle/delete) wired via inline handlers in the generated HTML.
+*/
 function renderTodos() {
     const list = document.getElementById('todo-list');
     const emptyState = document.getElementById('empty-state-todos');
@@ -160,7 +173,12 @@ function renderTodos() {
 }
 
 // ========== NOTES FUNCTIONS ==========
-
+/*
+ Add a new note:
+ - validate title + content
+ - create note object with id, title, content, and timestamp
+ - append to `notes`, persist, and re-render notes list
+*/
 function addNote() {
     const titleInput = document.getElementById('note-title');
     const contentInput = document.getElementById('note-content');
@@ -247,6 +265,10 @@ function formatDate(isoString) {
     return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
+/*
+ Render saved notes. Shows a grid of note cards or an empty state when none exist.
+ Uses `formatDate()` for timestamps and escapes user content before inserting into HTML.
+*/
 function renderNotes() {
     const container = document.getElementById('notes-list');
     const emptyState = document.getElementById('empty-state-notes');
@@ -274,7 +296,12 @@ function renderNotes() {
 }
 
 // ========== GOALS FUNCTIONS ==========
-
+/*
+ Add a goal:
+ - validate text, read optional deadline and category
+ - create goal object and persist to `goals`
+ - refresh UI and update goal progress stats
+*/
 function addGoal() {
     const input = document.getElementById('goal-input');
     const deadline = document.getElementById('goal-deadline').value;
@@ -336,6 +363,10 @@ function isOverdue(deadline) {
     return deadlineDate < today;
 }
 
+/*
+ Render goals list. Shows each goal with category, deadline, overdue state, and completion checkbox.
+ Updates empty state when there are no goals and applies overdue styling via `isOverdue()`.
+*/
 function renderGoals() {
     const list = document.getElementById('goals-list');
     const emptyState = document.getElementById('empty-state-goals');
@@ -374,6 +405,10 @@ function renderGoals() {
 
 // ========== STATS & UTILITIES ==========
 
+/*
+ Update header stats: total tasks, completed tasks, and active (remaining) tasks.
+ Called after any operation that mutates `todos` (add/toggle/delete/clear).
+*/
 function updateStats() {
     const totalTasks = todos.length;
     const completedTasks = todos.filter(t => t.completed).length;
@@ -392,7 +427,8 @@ function updateGoalStats() {
     document.getElementById('goals-progress').textContent = `${percentage}% Complete`;
 }
 
-// Prevent XSS attacks by escaping HTML
+// Escape text to prevent XSS when inserting user content into the DOM
+// Uses a DOM text assignment to safely encode characters
 function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
